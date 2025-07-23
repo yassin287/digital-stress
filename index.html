@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Stress App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="splash" class="page">
+    <div class="splash-logo">
+      <div class="circle"></div>
+      <h1>Digital Stress</h1>
+    </div>
+    <p class="splash-quote">“Take a deep breath. You’re doing great.”</p>
+    <button class="main-btn" onclick="showPage('login')">Get Started</button>
+  </div>
+  <div id="login" class="page active">
+    <h2>Login</h2>
+    <form onsubmit="return login(event)">
+      <input type="text" id="username" placeholder="Username" required />
+      <div class="password-wrapper">
+        <input type="password" id="password" placeholder="Password" required />
+        <span class="toggle-password" onclick="togglePassword()">👁️</span>
+      </div>
+      <button class="main-btn" type="submit">Login</button>
+    </form>
+    <div class="login-tip">Tip: Use any username and password</div>
+  </div>
+  <div id="home" class="page">
+    <div class="app-layout">
+      <button class="hamburger" onclick="toggleDrawer()" aria-label="Open menu">☰</button>
+      <div id="drawerOverlay" class="drawer-overlay" onclick="toggleDrawer()"></div>
+      <nav class="drawer" id="drawerMenu">
+        <div class="sidebar-title">Menu</div>
+        <ul>
+          <li><button onclick="switchFeature('stress');toggleDrawer()"><span class="menu-icon">🧘‍♂️</span>Stress Level</button></li>
+          <li><button onclick="switchFeature('interests');toggleDrawer()"><span class="menu-icon">🎯</span>Interests</button></li>
+          <li><button onclick="switchFeature('recommend');toggleDrawer()"><span class="menu-icon">💡</span>Recommendations</button></li>
+          <li><button onclick="switchFeature('dnd');toggleDrawer()"><span class="menu-icon">🔕</span>Do Not Disturb</button></li>
+          <li><button onclick="switchFeature('quote');toggleDrawer()"><span class="menu-icon">💬</span>Motivation</button></li>
+          <li><button onclick="switchFeature('tips');toggleDrawer()"><span class="menu-icon">📋</span>Quick Tips</button></li>
+          <li><button onclick="switchFeature('activity');toggleDrawer()"><span class="menu-icon">🧩</span>Activity</button></li>
+          <li><button onclick="switchFeature('breath');toggleDrawer()"><span class="menu-icon">🌬️</span>Breathing</button></li>
+          <li><button onclick="switchFeature('gratitude');toggleDrawer()"><span class="menu-icon">📝</span>Gratitude</button></li>
+          <li><button onclick="switchFeature('challenge');toggleDrawer()"><span class="menu-icon">🏆</span>Challenge</button></li>
+          <li><button class="logout-btn logout-menu-btn" onclick="showPage('login');toggleDrawer()"><span class="menu-icon">🚪</span>Logout</button></li>
+        </ul>
+      </nav>
+      <main class="feature-pages">
+        <section id="feature-stress" class="feature-section">
+          <h2>Hello, <span id="userDisplay"></span>!</h2>
+          <div class="feature-icon">🧘‍♂️</div>
+          <div class="feature-title">Stress Level</div>
+          <div class="stress-selector">
+            <label for="stressLevel">Select:</label>
+            <select id="stressLevel" onchange="updateStressLevel()">
+              <option value="Low">Low</option>
+              <option value="Moderate" selected>Moderate</option>
+              <option value="High">High</option>
+            </select>
+            <span id="stressEmoji">😌</span>
+          </div>
+        </section>
+        <section id="feature-interests" class="feature-section">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-title">Your Interests</div>
+          <div class="interests-selector">
+            <label><input type="checkbox" value="math" onchange="updateActivityRecommendations();updateDefaultActivity()"> Math</label>
+            <label><input type="checkbox" value="history" onchange="updateActivityRecommendations();updateDefaultActivity()"> History</label>
+          </div>
+        </section>
+        <section id="feature-recommend" class="feature-section">
+          <div class="feature-icon">💡</div>
+          <div class="feature-title">Activity Recommendation</div>
+          <ul id="activityList"></ul>
+        </section>
+        <section id="feature-dnd" class="feature-section">
+          <div class="feature-icon">🔕</div>
+          <div class="feature-title">Do Not Disturb</div>
+          <button class="dnd-btn" onclick="toggleDND()" id="dndBtn">Enable DND</button>
+          <div id="dndStatus" class="dnd-status">Notifications are ON</div>
+        </section>
+        <section id="feature-quote" class="feature-section">
+          <div class="feature-icon">💬</div>
+          <div class="feature-title">Motivational Quote</div>
+          <div class="motivation">
+            <span id="motivationQuote"></span>
+            <button class="motivation-btn" onclick="newQuote()">New Quote</button>
+          </div>
+        </section>
+        <section id="feature-tips" class="feature-section">
+          <div class="feature-icon">📋</div>
+          <div class="feature-title">Quick Tips</div>
+          <ul class="tips-list">
+            <li>Take a deep breath</li>
+            <li>Go for a short walk</li>
+            <li>Disconnect from screens for 5 minutes</li>
+            <li>Write down your thoughts</li>
+            <li>Listen to calming music</li>
+          </ul>
+        </section>
+        <section id="feature-activity" class="feature-section">
+          <div class="feature-icon">🧩</div>
+          <div class="feature-title">Try an Activity</div>
+          <div id="activityArea">
+            <button class="activity-btn" onclick="startMathActivity()">Math Question</button>
+            <button class="activity-btn" onclick="startHistoryActivity()">History Fact</button>
+            <div id="activityContent"></div>
+          </div>
+        </section>
+        <section id="feature-breath" class="feature-section">
+          <div class="feature-icon">🌬️</div>
+          <div class="feature-title">Breathing Exercise</div>
+          <div id="breathArea">
+            <button class="activity-btn" onclick="startBreathing()">Start Breathing</button>
+            <div id="breathContent"></div>
+          </div>
+        </section>
+        <section id="feature-gratitude" class="feature-section">
+          <div class="feature-icon">📝</div>
+          <div class="feature-title">Gratitude Journal</div>
+          <div id="gratitudeArea">
+            <input type="text" id="gratitudeInput" placeholder="What are you grateful for today?" style="width: 80%" />
+            <button class="activity-btn" onclick="addGratitude()">Add</button>
+            <ul id="gratitudeList"></ul>
+          </div>
+        </section>
+        <section id="feature-challenge" class="feature-section">
+          <div class="feature-icon">🏆</div>
+          <div class="feature-title">Daily Challenge</div>
+          <div id="challengeArea">
+            <span id="dailyChallenge"></span>
+            <button class="activity-btn" onclick="newChallenge()">New Challenge</button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
